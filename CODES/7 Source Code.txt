@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>JavaScript BreakOut Game Exercise</title>
+    <style>
+        .container {
+            height: 600px;
+            width: 80%;
+            margin-left: 10%;
+            overflow: hidden;
+            border: 1px solid black;
+            background-color: black;
+            margin-top: 20px;
+            position: relative;
+        }
+        
+        #ball {
+            position: absolute;
+            background-color: white;
+            height: 20px;
+            width: 20px;
+            top: 50%;
+            left: 50%;
+            border-radius: 25px;
+            display: none;
+            
+        }
+        
+        .paddle {
+            position: absolute;
+            height: 20px;
+            width: 150px;
+            background-color: white;
+            left: 50%;
+            bottom: 30px;
+            border-radius: 25px;
+        }
+        
+        .startBtn {
+            display: inline-block;
+            padding: 15px;
+            border: 1px solid black;
+            background-color: red;
+            color: white;
+            font-size: 2em;
+            text-align: center;
+        }
+        
+        .score,
+        .lives {
+            font-size: 3em;
+        }
+        .gameover {
+            position: absolute;
+            text-align: center;
+            color: white;
+            font-size: 3em;
+            line-height: 300px;
+            text-transform: uppercase;
+            width: 100%
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <div class="startBtn">Start Game</div> Score: <span class="score">0</span> Lives : <span class="lives">0</span> </div>
+    <div class="container">
+        <div id="ball"></div>
+        <div class="paddle"></div>
+        <div class="gameover">Click Start Button</div>
+    </div>
+    <script>
+        var container = document.querySelector('.container');
+        var ball = document.querySelector('#ball');
+        var paddle = document.querySelector('.paddle');
+        var btn_start = document.querySelector('.startBtn');
+        
+        var gameOver = false;
+        var gameInPlay = false;
+        var score = 0;
+        var lives = 5;
+        var animationRepeat;
+        var ballDir = [5,5,5];
+        var containerDim = container.getBoundingClientRect();
+        
+        btn_start.addEventListener('click',startGame);
+        document.addEventListener('keydown',function(e){
+            var key = e.keyCode;
+            e.preventDefault();
+            if(key===37) paddle.left = true;
+            else if (key===39) paddle.right = true;
+        });
+        document.addEventListener('keyup',function(e){
+            var key = e.keyCode;
+            e.preventDefault();
+            if(key===37) paddle.left = false;
+            else if (key===39) paddle.right = false;
+        });
+        
+        function startGame(){
+            document.querySelector('.gameover').style.display = 'none';
+            ball.style.display = 'block';
+            animationRepeat = requestAnimationFrame(update);
+            gameOver = false;
+            gameInPlay = true;
+        }
+        
+        function update(){
+            if(gameOver===false){
+                var pCurrent = paddle.offsetLeft;
+                if(paddle.left && pCurrent > 0){
+                    pCurrent -= 5;
+                } else if(paddle.right && pCurrent < (containerDim.width - paddle.offsetWidth)){
+                    pCurrent += 5;
+                }
+                paddle.style.left = pCurrent + 'px';
+                console.log(pCurrent);
+                
+                animationRepeat = requestAnimationFrame(update);
+            }
+        }
+    </script>
+</body>
+</html>
